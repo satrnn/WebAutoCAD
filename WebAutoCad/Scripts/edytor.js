@@ -41,14 +41,17 @@ function addLine(x, y)
     var group = document.createElementNS("http://www.w3.org/2000/svg", "g");
     var startPoint = createPoint(x, y);
     var endPoint = createPoint(x, y);
-    var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     
-    path.setAttribute("class", "line");
-    path.setAttribute("d", "M " + x +"," + y);
+    line.setAttribute("class", "line");
+    line.setAttribute("x1", x);
+    line.setAttribute("y1", y);
+    line.setAttribute("x2", x);
+    line.setAttribute("y2", y);
 
     group.setAttribute("id", "line"+idIterator++);
 
-    group.appendChild(path);
+    group.appendChild(line);
     group.appendChild(startPoint);
     group.appendChild(endPoint);
     
@@ -58,7 +61,7 @@ function addLine(x, y)
         group: group,
         startPoint: startPoint,
         endPoint: endPoint,
-        line: path,
+        line: line,
     };
 }
 
@@ -79,13 +82,16 @@ svg[0].addEventListener("mousemove", function(e){
         dragElemnt.setAttribute("x", e.offsetX - 5);
         dragElemnt.setAttribute("y", e.offsetY - 5);
 
-        var line = dragElemnt.parentNode.querySelectorAll("path")[0];
+        var line = dragElemnt.parentNode.querySelectorAll("line")[0];
         var points = dragElemnt.parentNode.querySelectorAll("rect");
         var x1 = parseFloat(points[0].getAttribute("x")) + 5;
         var y1 = parseFloat(points[0].getAttribute("y")) + 5;
         var x2 = parseFloat(points[1].getAttribute("x")) + 5;
         var y2 = parseFloat(points[1].getAttribute("y")) + 5;
-        line.setAttribute("d", "M "+x1 + ","+y1+" " +x2 + ","+y2)
+        line.setAttribute("x1",x1);
+        line.setAttribute("x2",x2);
+        line.setAttribute("y1",y1);
+        line.setAttribute("y2",y2);
     }
     else
     {

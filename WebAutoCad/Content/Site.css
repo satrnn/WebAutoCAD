@@ -14,12 +14,25 @@ rect.point {
     cursor: move;
 }
 
+rect.point:hover
+{
+
+    stroke: #ff0000;
+}
+
 rect.point.active
 {
     stroke: #ffb300;
 }
 
-path.line {
+line.line {
     stroke:#000000;
     stroke-width:1px;
+    stroke-linecap: "round";
+}
+
+line.line:hover
+{
+    stroke: #3c2f56;
+
 }
