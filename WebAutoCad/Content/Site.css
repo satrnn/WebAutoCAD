@@ -1,0 +1,25 @@
+﻿svg {
+
+}
+
+rect.point {
+    opacity: 1;
+    fill: #c2bcda;
+    fill-opacity: 1;
+    stroke: #3c2f56;
+    stroke-width: 1;
+    stroke-miterlimit: 4;
+    stroke-dasharray: none;
+    stroke-opacity: 1;
+    cursor: move;
+}
+
+rect.point.active
+{
+    stroke: #ffb300;
+}
+
+path.line {
+    stroke:#000000;
+    stroke-width:1px;
+}
