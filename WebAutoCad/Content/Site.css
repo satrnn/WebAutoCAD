@@ -97,3 +97,17 @@ line.clickable.select
     stop-opacity: 1;
     stroke: rgba(59, 173, 255, 0.5);
 }
+
+/*TABELKA*/
+tr {
+    cursor: pointer;
+}
+
+tr:hover{
+    background: #fffabd;
+}
+
+tr.active
+{
+    background: #bde3ff;
+}
