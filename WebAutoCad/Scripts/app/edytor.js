@@ -10,6 +10,14 @@ $("#btn-line").click(function(){
     $("#btn-select").removeClass("active");
 });
 
+$("#type").change(function(e){
+     lineManager.updateSelectedLines();
+});
+
+$("#leng").change(function(e){
+    lineManager.updateSelectedLines();
+});
+
 var svg = $("svg");
 var layer = $("#layer1");
 
@@ -26,8 +34,28 @@ function getCurrentLabel(){
 
 }
 
+svg[0].addEventListener("contextmenu", function(event){
+    event.preventDefault();
+    event.stopPropagation();
+    $(".popover").remove();
+    if(event.target.nodeName === "svg"){
+
+    } 
+    else
+    {
+        lineManager.onContextMenu(event);
+    }
+
+    return false;
+});
+
 svg[0].addEventListener("mousedown", function(e)
 {
+    $(".popover").remove();
+    if(e.which != 1)
+    {
+        return;
+    }
     if(e.target.tagName == "text")
     {
         lineManager.selectObj(e.target.parentNode);
@@ -109,4 +137,10 @@ svg[0].addEventListener("mousemove", function(e){
     {
 
     }
+});
+
+$(document).click(function(e){
+    $(".popover").remove();
+}).contextmenu(function(e){
+    $(".popover").remove();
 });

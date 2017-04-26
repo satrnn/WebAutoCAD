@@ -18,9 +18,19 @@ var lineManager = {
         newline.clickable.setAttribute("stroke-linecap", "round");
         
         newline.label.setAttribute("class", "label");
-        newline.label.textContent = getCurrentLabel();
         newline.label.setAttribute("text-anchor", "middle");
         
+        var leng = $("#leng").val();
+        if(leng == "")
+            leng = 0;
+
+        var type = $("#type").val();
+
+        newline.setState({
+            leng: leng,
+            type: type
+        });
+
         newline.move1(x1, y1);
         newline.move2(x2, y2);
         
@@ -33,7 +43,6 @@ var lineManager = {
 
         newline.clickable.addEventListener("click", function(e){
             e.stopPropagation();
-
             var id = this.parentNode.getAttribute("id");
 
             lineManager.select(id);
@@ -44,8 +53,8 @@ var lineManager = {
        
         lineManager.lines.push(newline);
 
-        $("table tbody").append("<tr data-lineid=\""+newline.id+"\"><td>"+newline.label.textContent+"</td></tr>")
-
+        tableManager.addRow(newline);
+        
         return newline;
     },
     selectObj: function(obj){
@@ -53,14 +62,14 @@ var lineManager = {
         lineManager.select(id);
     },
     select: function(id){
-
-
         for(var i= 0; i < lineManager.lines.length; i++)
         {
             var line = lineManager.lines[i];
              if(line.id == id){
 
                 line.Select();
+                $("#type").val(line.state.type);
+                $("#leng").val(line.state.leng);
              }
              else
              {
@@ -78,6 +87,15 @@ var lineManager = {
              }
         }
     },
+    index: function(id) {
+        for(var i=0; i < lineManager.lines.length; i++)
+        {
+            var line = lineManager.lines[i];
+             if(line.id == id){
+                return i;
+             }
+        }
+    },
     findPoint: function(id){
         var tmp = id.split("_");
         var line = lineManager.find(tmp[0]);
@@ -91,72 +109,60 @@ var lineManager = {
         {
             return line.point2;
         }
-    }
-}
-
-function PointMove(line, nr, x, y)
-{
-    this.Obj = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    this.Obj.setAttribute("cx", x);
-    this.Obj.setAttribute("cy", y);
-    this.Obj.setAttribute("r", 10);
-    this.Obj.setAttribute("id", line.id + "_" + nr);
-    this.Obj.setAttribute("fill", "red");
-    this.Obj.setAttribute("stroke", "none");
-    this.Obj.setAttribute("class", "point");
-
-    this.Obj.addEventListener("mousedown", function(e){
-        e.stopPropagation();
-
-        var _thisPoint = lineManager.findPoint(this.getAttribute("id"));
-
-        var shadowline = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        shadowline.setAttribute("class", "line creating");
-        if(_thisPoint.Number == 1){
-            shadowline.setAttribute("x1", _thisPoint.Line.x2);
-            shadowline.setAttribute("y1", _thisPoint.Line.y2);
+    },
+    findSelected: function(){
+        var selected = [];
+        for(var i = 0; i < lineManager.lines.length; i++)
+        {
+            var line = lineManager.lines[i];
+             if(line.isSelected()){
+                selected.push(line);
+             }
         }
-        if(_thisPoint.Number == 2){
-            shadowline.setAttribute("x1", _thisPoint.Line.x1);
-            shadowline.setAttribute("y1", _thisPoint.Line.y1);
+        return selected;
+    },
+    updateSelectedLines: function(){
+
+        var leng = $("#leng").val();
+        if(leng == "")
+            leng = 0;
+
+        var type = $("#type").val();
+
+        var selected = lineManager.findSelected();
+        for(var i = 0; i < selected.length; i++)
+        {
+            selected[i].setState({
+                type: type,
+                leng: leng,
+            });
+            tableManager.updateRow(selected[i]);
         }
-
-        shadowline.setAttribute("x2", e.offsetX);
-        shadowline.setAttribute("y2", e.offsetY);
-
-        layer[0].appendChild(shadowline);
-
-        dragElemnt = {
-            point: _thisPoint,
-            shadow: shadowline,
-        };
-    });
-
-    line.group.appendChild(this.Obj);
-
-    this.X = x;
-    this.Y = y;
-    this.Line = line;
-    this.Number = nr;
-
-    this.Delete = function()
+    },
+    deleteById: function(id)
     {
-        this.Obj.parentNode.removeChild(this.Obj);
-    }
-
-    this.Move = function(x, y)
+        var line = lineManager.find(id);
+        var i = lineManager.index(id);
+        line.delete();
+        lineManager.lines.splice(i, 1);
+        delete  line;
+    },
+    onContextMenu: function(event)
     {
-        this.X = x;
-        this.Y = y;
-        this.Obj.setAttribute("cx", x);
-        this.Obj.setAttribute("cy", y);
-    }
+        var line = lineManager.find(event.target.parentNode.getAttribute("id"));
+        lineManager.select(line.id);
+        var $popover = $("<ul>");
+        $popover.addClass("popover");
+        $popover.css({ left: event.pageX, top:event.pageY});
+        $deleteBtn = $("<a data-lineid=\""+line.id+"\" href=\"#\">Usuń</a>");
+        $deleteBtn.click(function(){
+            var id = this.dataset.lineid;
+            lineManager.deleteById(id);
+        });
+        $deleteBtn.appendTo("<li></li>")
+        $popover.append($deleteBtn);
 
-    this.MoveEndLine = function(x, y){
-        if(this.Number == 1)
-            this.Line.move1(x, y);
-        if(this.Number == 2)
-            this.Line.move2(x, y);
+        $("body").append($popover);
     }
 }
 
@@ -168,6 +174,10 @@ function Line()
     this.y2 = 0;
 
     this.id = "";
+    this.state = {
+        leng,
+        type,
+    };
 
     this.group = null;
     this.line = null;
@@ -189,6 +199,11 @@ function Line()
             this.point2.Delete();
 
         this.point2 = new PointMove(this, 2, this.x2, this.y2);
+        tableManager.select(this);
+    }
+
+    this.isSelected = function(){
+        return this.clickable.getAttribute("class") == "clickable select";
     }
 
     this.Unselect = function()
@@ -205,6 +220,7 @@ function Line()
             this.point2.Delete();
             this.point2 = null;
         }
+        tableManager.unselect(this);
     }
 
     this.move2 = function(x, y)
@@ -222,8 +238,7 @@ function Line()
             this.point2.Move(x, y);
         }
 
-        this.label.setAttribute("x", (parseFloat(this.x1) + parseFloat(this.x2))/2);
-        this.label.setAttribute("y", (parseFloat(this.y1) + parseFloat(this.y2))/2 - 5);
+        this.moveLabel();
     }
 
     this.move1 = function(x, y)
@@ -241,10 +256,27 @@ function Line()
             this.point1.Move(x, y);
         }
 
-        this.label.setAttribute("x", (parseFloat(this.x1) + parseFloat(this.x2))/2);
-        this.label.setAttribute("y", (parseFloat(this.y1) + parseFloat(this.y2))/2 - 5);
-
+        this.moveLabel();
     }
 
+    this.moveLabel = function(){
+        this.label.setAttribute("x", (parseFloat(this.x1) + parseFloat(this.x2))/2);
+        this.label.setAttribute("y", (parseFloat(this.y1) + parseFloat(this.y2))/2 - 5);
+    }
+
+    this.setState= function(data){
+        this.state = data;
+        var text = this.state.type + " " + this.state.leng + "[m]";
+        this.label.textContent = text;
+    }
+
+    this.delete = function(){
+        tableManager.deleteRow(this);
+
+        this.point1.Delete();
+        this.point2.Delete();
+
+        this.group.parentNode.removeChild(this.group);
+    }
 
 };

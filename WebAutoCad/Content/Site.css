@@ -28,6 +28,16 @@
     cursor: default;
 }
 
+.popover {
+    position: absolute;
+    display: inline-block;
+    background: #fff;
+    border: 1px solid#ccc;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
 circle.point {
     cursor: move;
 }
