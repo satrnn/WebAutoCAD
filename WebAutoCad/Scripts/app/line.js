@@ -76,6 +76,34 @@ var lineManager = {
         }
        
     },
+    selectInRect: function (x1, y1, x2, y2)
+    {
+        var firstSelect = null;
+        for(var i= 0; i < lineManager.lines.length; i++)
+        {
+            var line = lineManager.lines[i];
+             if(line.isInRect(x1, y1, x2, y2)){
+
+                line.Select();
+                if(firstSelect == null)
+                    firstSelect = line;
+             }
+             else
+             {
+                line.Unselect();
+             }
+        }
+
+        if(firstSelect != null)
+        {
+            $("#type").val(firstSelect.state.type);
+            $("#leng").val(firstSelect.state.leng);
+            ResetFi();
+            var typeDom = $("#type")[0];
+            var fi = typeDom.options[typeDom.selectedIndex].dataset.fi;
+            $(fi).val(firstSelect.state.fi);
+        }
+    },
     find: function(id) {
         for(var i= 0; i < lineManager.lines.length; i++)
         {
@@ -156,6 +184,14 @@ var lineManager = {
         lineManager.lines.splice(i, 1);
         delete  line;
     },
+    deleteSelected: function()
+    {
+        var selected = lineManager.findSelected();
+        for(var i = 0; i < selected.length; i++)
+        {
+            lineManager.deleteById(selected[i].id);
+        }
+    },
     onContextMenu: function(event)
     {
         var line = lineManager.find(event.target.parentNode.getAttribute("id"));
@@ -215,7 +251,29 @@ function Line()
     this.isSelected = function(){
         return this.clickable.getAttribute("class") == "clickable select";
     }
+    this.isInRect = function(x1, y1, x2, y2)
+    {
+        var isx;
+        var isy;
+        if(x1 > x2){
+            isx = x1 > this.x1 && x1 > this.x2 &&  x2 < this.x1 && x2 < this.x2;
+        }
+        else
+        {
+            isx = x1 < this.x1 && x1 < this.x2 &&  x2 > this.x1 && x2 > this.x2;
+        }
 
+        if(y1 > y2){
+            isy = y1 > this.y1 && y1 > this.y2 && y2 < this.y1 && y2 < this.y2;
+        }
+        else
+        {
+            isy =  y1 < this.y1 && y1 < this.y2 && y2 > this.y1 && y2 > this.y2;
+        }
+
+        return isx && isy 
+
+    },
     this.Unselect = function()
     {
         this.clickable.setAttribute("class","clickable");

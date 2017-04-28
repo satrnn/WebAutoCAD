@@ -101,12 +101,18 @@ svg[0].addEventListener("mousedown", function(e)
             shadow: shadowline,
         };
     }
+    else if(mode == 0){
+        layerSelected.startSelect(e.offsetX, e.offsetY);
+    }
 });
 
 svg[0].addEventListener("mouseup", function(e){
     
     e.stopPropagation();
-    if(mode == 1 && dragElemnt != null && dragElemnt.shadow != null)
+    if(layerSelected.isSelecting()){
+        layerSelected.endSelect(e.offsetX, e.offsetY);
+    }
+    else if(mode == 1 && dragElemnt != null && dragElemnt.shadow != null)
     {
         var x1 = dragElemnt.shadow.getAttribute("x1");
         var y1 = dragElemnt.shadow.getAttribute("y1");
@@ -156,11 +162,17 @@ svg[0].addEventListener("mousemove", function(e){
         dragElemnt.shadow.setAttribute("x2", e.offsetX);
         dragElemnt.shadow.setAttribute("y2", e.offsetY);
     }
-    else
+    else if(layerSelected.isSelecting())
     {
-
+        layerSelected.moveSelect(e.offsetX, e.offsetY)
     }
 });
+$(window).on('keyup', function (evt){
+    if(evt.keyCode == 46)
+    {
+        lineManager.deleteSelected();
+    }
+ });
 
 $(document).click(function(e){
     $(".popover").remove();
