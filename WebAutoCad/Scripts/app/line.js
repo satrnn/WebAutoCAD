@@ -3,6 +3,7 @@
 var lineManager = {
     lines: [],
 
+    /* Tworzenie nowej linii */
     addLine: function(x1, y1, x2, y2)
     {
         var newline = new Line();
@@ -20,16 +21,9 @@ var lineManager = {
         newline.label.setAttribute("class", "label");
         newline.label.setAttribute("text-anchor", "middle");
         
-        var leng = $("#leng").val();
-        if(leng == "")
-            leng = 0;
+        var data = lineManager.readInputs();
 
-        var type = $("#type").val();
-
-        newline.setState({
-            leng: leng,
-            type: type
-        });
+        newline.setState(data);
 
         newline.move1(x1, y1);
         newline.move2(x2, y2);
@@ -70,6 +64,10 @@ var lineManager = {
                 line.Select();
                 $("#type").val(line.state.type);
                 $("#leng").val(line.state.leng);
+                ResetFi();
+                var typeDom = $("#type")[0];
+                var fi = typeDom.options[typeDom.selectedIndex].dataset.fi;
+                $(fi).val(line.state.fi);
              }
              else
              {
@@ -110,7 +108,9 @@ var lineManager = {
             return line.point2;
         }
     },
-    findSelected: function(){
+
+    findSelected: function()
+    {
         var selected = [];
         for(var i = 0; i < lineManager.lines.length; i++)
         {
@@ -121,21 +121,30 @@ var lineManager = {
         }
         return selected;
     },
-    updateSelectedLines: function(){
-
+    readInputs: function(){
         var leng = $("#leng").val();
         if(leng == "")
             leng = 0;
 
         var type = $("#type").val();
+        var typeDom = $("#type")[0];
+        var fi = typeDom.options[typeDom.selectedIndex].dataset.fi;
+        var fiValue = $(fi).val();
+
+        return {
+            type: type,
+            leng: leng,
+            fi: fiValue,
+        }
+    },
+    updateSelectedLines: function(){
+
+        var data = lineManager.readInputs();
 
         var selected = lineManager.findSelected();
         for(var i = 0; i < selected.length; i++)
         {
-            selected[i].setState({
-                type: type,
-                leng: leng,
-            });
+            selected[i].setState(data);
             tableManager.updateRow(selected[i]);
         }
     },
@@ -175,8 +184,9 @@ function Line()
 
     this.id = "";
     this.state = {
-        leng,
-        type,
+        leng: "0",
+        type: "",
+        fi: "0"
     };
 
     this.group = null;
@@ -265,8 +275,8 @@ function Line()
     }
 
     this.setState= function(data){
-        this.state = data;
-        var text = this.state.type + " " + this.state.leng + "[m]";
+        this.state = jQuery.extend({}, data);;
+        var text = this.state.type + " fi"+ this.state.fi + " " + this.state.leng + "[m]";
         this.label.textContent = text;
     }
 

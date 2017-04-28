@@ -2,7 +2,7 @@ var tableManager = {
     data: {},
     addRow: function(line)
     {
-        $row =  $("<tr data-lineid=\""+line.id+"\"><td>"+line.label.textContent+"</td></tr>");
+        $row =  $("<tr data-lineid=\""+line.id+"\"><td>"+line.state.type + " "+ line.state.fi+"</td><td>"+line.state.leng+" [m]</td></tr>");
         $row.click(function(){
             var id = this.dataset.lineid;
             lineManager.select(id);
@@ -16,8 +16,8 @@ var tableManager = {
     updateRow: function(line)
     {
         $row = tableManager.find(line.id);
-        $row.find("td").text(line.label.textContent);
-
+        $row.find("td")[0].innerText = line.state.type + " "+ line.state.fi; //.text(line.label.textContent);
+        $row.find("td")[1].innerText = line.state.leng+" [m]";
          this.data[line.id] = line.state;
          this.summary();
     },
@@ -50,18 +50,24 @@ var tableManager = {
             var data = tableManager.data[prop];
             if(data != undefined)
             {
-                if(sum[data.type] == undefined)
+                var key = data.type+"_" + data.fi;
+                if(sum[key] == undefined)
                 {
-                    sum[data.type] = parseFloat(data.leng);
+                    sum[key] = parseFloat(data.leng);
                 }
                 else
-                    sum[data.type] += parseFloat(data.leng);
+                    sum[key] += parseFloat(data.leng);
             }
         }
         $("#summary").html("");
         for(var prop in sum)
         {
-             $("#summary").append("<li>"+ prop + " "+ sum[prop]+"[m] </li>");
+            if(sum[prop] == 0)
+            {
+                continue;
+            }
+            var temp = prop.split("_");
+            $("#summary").append("<li>"+ temp[0]+ " " + temp[1] + " <strong>"+ sum[prop]+"[m]</strong> </li>");
         }
        
     }

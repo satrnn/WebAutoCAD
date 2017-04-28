@@ -10,8 +10,31 @@ $("#btn-line").click(function(){
     $("#btn-select").removeClass("active");
 });
 
+function ResetFi()
+{
+    $("#fi_1,#fi_2,#fi_3").hide();
+    var type = $("#type")[0];
+    var fi = type.options[type.selectedIndex].dataset.fi;
+    $(fi).show();
+}
+ResetFi();
+
 $("#type").change(function(e){
-     lineManager.updateSelectedLines();
+    ResetFi();
+
+    lineManager.updateSelectedLines();
+});
+
+$("#fi_1").change(function(e){
+    lineManager.updateSelectedLines();
+});
+
+$("#fi_2").change(function(e){
+    lineManager.updateSelectedLines();
+});
+
+$("#fi_3").change(function(e){
+    lineManager.updateSelectedLines();
 });
 
 $("#leng").change(function(e){
