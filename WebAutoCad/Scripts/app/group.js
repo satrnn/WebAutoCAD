@@ -8,8 +8,31 @@ function Group()
     {
         this.lines.push(line);
     }
+    this.deleteLine = function(line)
+    {
+        for(var i = 0; i < this.lines.length; i++)
+        {
+            if(line.id == this.lines[i].id){
+                this.lines.splice(i, 1);
+                break;
+            }
+        }
 
+        if(this.lines.length == 0){
+            this.delete();
+        }
+    }
     this.select = function()
+    {
+        this.showFrame();
+        for (var i = 0; i < this.lines.length; i++) {
+            var line = this.lines[i];
+
+            line.select(false);
+        }
+    }
+
+    this.showFrame = function()
     {
         if(this.lines.length == 0)
         {
@@ -20,8 +43,6 @@ function Group()
         
         for (var i = 0; i < this.lines.length; i++) {
             var line = this.lines[i];
-
-            line.select(false);
             
             if(line.getLeft() < x1)
             {
@@ -40,7 +61,6 @@ function Group()
             {
                 y2 = line.getBottom();
             }
-            
         }
 
         if(this.frame == null)
@@ -49,14 +69,13 @@ function Group()
             this.frame.setAttribute("stroke", "#bde3ff");
             this.frame.setAttribute("stroke-width", "0.7px");
             this.frame.setAttribute("fill", "none");
+            layer[0].appendChild(this.frame);
         }
         
         this.frame.setAttribute("x", x1);
         this.frame.setAttribute("y", y1);
         this.frame.setAttribute("width", x2 - x1);
         this.frame.setAttribute("height", y2 - y1);
-
-        layer[0].appendChild(this.frame);
     }
 
     this.unselect = function()

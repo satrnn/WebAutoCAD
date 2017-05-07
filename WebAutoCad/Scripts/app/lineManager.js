@@ -154,6 +154,11 @@ var lineManager = {
                 var typeDom = $("#type")[0];
                 var fi = typeDom.options[typeDom.selectedIndex].dataset.fi;
                 $(fi).val(selectedLine.state.fi);
+
+                if(selectedLine.group != null)
+                {
+                    selectedLine.group.showFrame();
+                }
             }
             else
             {
@@ -290,8 +295,12 @@ var lineManager = {
         var line = lineManager.find(id);
         var i = lineManager.index(id);
         line.delete();
+        if(line.group != null){
+            line.group.deleteLine(line);
+        }
+
         lineManager.lines.splice(i, 1);
-        delete  line;
+        delete line;
     },
     deleteSelected: function()
     {

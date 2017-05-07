@@ -1,3 +1,93 @@
+var shadowMoveEndPoint = {
+     _dragElemnt: null,
+
+    // czy trwa ruch
+    isShadow: function(){
+        return this._dragElemnt != null && this._dragElemnt.shadow != null;
+    },
+
+    isMovingPoint: function(){
+        return this.isShadow() && this._dragElemnt.point != null;
+    },
+
+    start: function(x, y){
+        var shadowline = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        shadowline.setAttribute("class", "line creating");
+        shadowline.setAttribute("x1", x);
+        shadowline.setAttribute("y1", y);
+        
+        shadowline.setAttribute("x2", x);
+        shadowline.setAttribute("y2", y);
+
+        layer[0].appendChild(shadowline);
+
+        this._dragElemnt = {
+            shadow: shadowline,
+        };
+    },
+
+    startPoint: function (point, x, y)
+    {
+        this.start(x, y);
+        if(point.Number == 1){
+            this._dragElemnt.shadow.setAttribute("x1", point.Line.x2);
+            this._dragElemnt.shadow.setAttribute("y1", point.Line.y2);
+        }
+        if(point.Number == 2){
+            this._dragElemnt.shadow.setAttribute("x1", point.Line.x1);
+            this._dragElemnt.shadow.setAttribute("y1", point.Line.y1);
+        }
+
+        this._dragElemnt.point = point;
+    },
+
+
+    move: function(x, y){
+        this._dragElemnt.shadow.setAttribute("x2", x);
+        this._dragElemnt.shadow.setAttribute("y2", y);
+    },
+
+    stop: function(x, y)
+    {
+        if(mode == modeEnum.LINES && this.isShadow())
+        {
+            var x1 = this._dragElemnt.shadow.getAttribute("x1");
+            var y1 = this._dragElemnt.shadow.getAttribute("y1");
+            
+            var x2 = this._dragElemnt.shadow.getAttribute("x2");
+            var y2 = this._dragElemnt.shadow.getAttribute("y2");
+
+            if(x1 == x2 && y1 == y2)
+            {
+                lineManager.unselect();
+            }
+            else
+            {
+                if(this._dragElemnt.point == null)
+                {
+                    var newLine = lineManager.addLine(x1, y1, x2, y2);
+                    lineManager.select(newLine.id);
+                }
+            }
+        }
+
+        if(this.isMovingPoint())
+        {
+            this._dragElemnt.point.MoveEndLine(x, y);
+        }
+
+        if(this._dragElemnt != null && this._dragElemnt.shadow != null)
+        {
+            this._dragElemnt.shadow.parentNode.removeChild(this._dragElemnt.shadow);
+            this._dragElemnt.shadow = null;
+        }
+        
+        this._dragElemnt = null;
+    },
+
+
+}
+
 var shadow = {
     _elements: [],
     _start: {
@@ -65,6 +155,7 @@ var shadow = {
             element.line.move2(parseFloat(element.line.x2) + vectorX, parseFloat(element.line.y2) + vectorY);
 
             element.shadowline.parentNode.removeChild(element.shadowline);
+            element.shadowline == null;
 
             if(element.line.group != null)
             {

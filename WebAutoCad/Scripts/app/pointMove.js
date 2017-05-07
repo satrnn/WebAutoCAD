@@ -15,30 +15,9 @@ function PointMove(line, nr, x, y)
             return;
         }
         var _thisPoint = lineManager.findPoint(this.getAttribute("id"));
-
-        var shadowline = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        shadowline.setAttribute("class", "line creating");
-        if(_thisPoint.Number == 1){
-            shadowline.setAttribute("x1", _thisPoint.Line.x2);
-            shadowline.setAttribute("y1", _thisPoint.Line.y2);
-        }
-        if(_thisPoint.Number == 2){
-            shadowline.setAttribute("x1", _thisPoint.Line.x1);
-            shadowline.setAttribute("y1", _thisPoint.Line.y1);
-        }
-
-        shadowline.setAttribute("x2", e.offsetX);
-        shadowline.setAttribute("y2", e.offsetY);
-
-        layer[0].appendChild(shadowline);
-
-        dragElemnt = {
-            point: _thisPoint,
-            shadow: shadowline,
-        };
+        shadowMoveEndPoint.startPoint(_thisPoint, e.offsetX, e.offsetY);
     });
-
-    line.container.appendChild(this.Obj);
+    $("#layerPoints")[0].appendChild(this.Obj);
 
     this.X = x;
     this.Y = y;
@@ -57,11 +36,15 @@ function PointMove(line, nr, x, y)
     {
         this.X = x;
         this.Y = y;
-        this.Obj.setAttribute("cx", x);
-        this.Obj.setAttribute("cy", y);
+        if(this.Obj != null){
+            this.Obj.setAttribute("cx", x);
+            this.Obj.setAttribute("cy", y);
+        }
+        
     }
 
-    this.MoveEndLine = function(x, y){
+    this.MoveEndLine = function(x, y)
+    {
         if(this.Number == 1)
             this.Line.move1(x, y);
         if(this.Number == 2)

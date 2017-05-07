@@ -123,6 +123,15 @@ function Line()
         tableManager.unselect(this);
     }
 
+    this._move = function()
+    {
+         this.moveLabel();
+         if(this.group != null)
+         {
+            this.group.showFrame();
+         }
+    }
+
     this.move2 = function(x, y)
     {
         this.x2 = parseFloat(x);
@@ -138,7 +147,7 @@ function Line()
             this.point2.Move(x, y);
         }
 
-        this.moveLabel();
+        this._move();
     }
 
     this.move1 = function(x, y)
@@ -156,7 +165,7 @@ function Line()
             this.point1.Move(x, y);
         }
 
-        this.moveLabel();
+        this._move();
     }
 
     this.moveLabel = function(){

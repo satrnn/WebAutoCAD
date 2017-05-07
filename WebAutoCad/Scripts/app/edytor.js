@@ -50,7 +50,7 @@ $("#leng").change(function(e){
 var svg = $("svg");
 var layer = $("#layer1");
 
-var dragElemnt = null;
+
 
 function getCurrentLabel(){
     var leng = $("#leng").val();
@@ -88,22 +88,9 @@ svg[0].addEventListener("mousedown", function(e)
         lineManager.selectObj(e.target.parentNode);
         return;
     }
-    if(mode == modeEnum.LINES && dragElemnt == null)
+    if(mode == modeEnum.LINES && !shadowMoveEndPoint.isShadow())
     {
-        var shadowline = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        shadowline.setAttribute("class", "line creating");
-        shadowline.setAttribute("x1", e.offsetX);
-        shadowline.setAttribute("y1", e.offsetY);
-        
-        shadowline.setAttribute("x2", e.offsetX);
-        shadowline.setAttribute("y2", e.offsetY);
-
-        layer[0].appendChild(shadowline);
-
-        dragElemnt = {
-            line: null,
-            shadow: shadowline,
-        };
+        shadowMoveEndPoint.start(e.offsetX, e.offsetY);
     }
     else if(mode == modeEnum.SELECT){
         layerSelected.startSelect(e.offsetX, e.offsetY);
@@ -116,65 +103,31 @@ svg[0].addEventListener("mouseup", function(e){
     if(layerSelected.isSelecting()){
         layerSelected.endSelect(e.offsetX, e.offsetY);
     }
-    else if(mode == modeEnum.LINES && dragElemnt != null && dragElemnt.shadow != null)
-    {
-        var x1 = dragElemnt.shadow.getAttribute("x1");
-        var y1 = dragElemnt.shadow.getAttribute("y1");
-        
-        var x2 = dragElemnt.shadow.getAttribute("x2");
-        var y2 = dragElemnt.shadow.getAttribute("y2");
+    
 
-        if(x1 == x2 && y1 == y2)
-        {
-            lineManager.unselect();
-        }
-        else
-        {
-            if(dragElemnt.point == null){
-                var newLine = lineManager.addLine(x1, y1, x2, y2);
-                lineManager.select(newLine.id);
-            }
-            else
-            {
-                dragElemnt.point.MoveEndLine(x2, y2);
-
-            }
-        }
-    }
-    else
-    {
-        if(dragElemnt != null && dragElemnt.point != null)
-        {
-            var x2 = dragElemnt.shadow.getAttribute("x2");
-            var y2 = dragElemnt.shadow.getAttribute("y2");
-            dragElemnt.point.MoveEndLine(x2, y2);
-        }
-    }
-
-    if(dragElemnt != null && dragElemnt.shadow != null)
-    {
-        dragElemnt.shadow.parentNode.removeChild(dragElemnt.shadow);
-    }
+    shadowMoveEndPoint.stop(e.offsetX, e.offsetY);
     shadow.stop(e.offsetX, e.offsetY);
-    dragElemnt = null;
 });
 
 svg[0].addEventListener("mousemove", function(e){
     e.preventDefault();
 
-    if(dragElemnt != null)
+    if(shadowMoveEndPoint.isShadow())
     {
-        dragElemnt.shadow.setAttribute("x2", e.offsetX);
-        dragElemnt.shadow.setAttribute("y2", e.offsetY);
+        shadowMoveEndPoint.move(e.offsetX, e.offsetY);
     }
     else if(layerSelected.isSelecting())
     {
         layerSelected.moveSelect(e.offsetX, e.offsetY)
-    } else if(shadow.isShadow()){
+    } 
+    else if(shadow.isShadow())
+    {
         shadow.move(e.offsetX, e.offsetY);
     }
 });
-$(window).on('keyup', function (evt){
+
+$(window).on('keyup', function (evt)
+{
     if(evt.keyCode == 46)
     {
         lineManager.deleteSelected();
