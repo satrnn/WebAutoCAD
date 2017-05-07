@@ -98,6 +98,11 @@ line.clickable.select
     stroke: rgba(59, 173, 255, 0.5);
 }
 
+line.shadow {
+    stroke:#000000;
+    stroke-width:0.5px;
+}
+
 /*TABELKA*/
 tr {
     cursor: pointer;

@@ -1,0 +1,5 @@
+var groupManager = {
+    createGroup: function (){
+        
+    },
+}

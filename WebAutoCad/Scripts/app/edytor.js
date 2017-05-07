@@ -121,7 +121,7 @@ svg[0].addEventListener("mouseup", function(e){
         var y2 = dragElemnt.shadow.getAttribute("y2");
 
         if(x1 == x2 && y1 == y2){
-            
+            lineManager.unselect();
         }
         else
         {
@@ -145,12 +145,11 @@ svg[0].addEventListener("mouseup", function(e){
         }
     }
 
-
     if(dragElemnt != null && dragElemnt.shadow != null)
     {
         dragElemnt.shadow.parentNode.removeChild(dragElemnt.shadow);
     }
-        
+    shadow.stop(e.offsetX, e.offsetY);
     dragElemnt = null;
 });
 
@@ -165,6 +164,8 @@ svg[0].addEventListener("mousemove", function(e){
     else if(layerSelected.isSelecting())
     {
         layerSelected.moveSelect(e.offsetX, e.offsetY)
+    } else if(shadow.isShadow()){
+        shadow.move(e.offsetX, e.offsetY);
     }
 });
 $(window).on('keyup', function (evt){

@@ -65,7 +65,8 @@ var layerSelected = {
         {
             layerSelected.layer.removeChild(layerSelected.selectDOM);
 
-            while (layerSelected.layer.firstChild) {
+            while (layerSelected.layer.firstChild) 
+            {
                 layerSelected.layer.removeChild(layerSelected.layer.firstChild);
             }
 
