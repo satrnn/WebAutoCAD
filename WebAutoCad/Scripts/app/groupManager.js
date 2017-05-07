@@ -17,9 +17,12 @@ var groupManager = {
 
             newGroup.addLine(selectedLines[i]);
             selectedLines[i].group = newGroup;
+
+            tableManager.updateRow(selectedLines[i]);
         }
 
-        for(groupId in oldGroups){
+        for(groupId in oldGroups)
+        {
             oldGroups[groupId].delete();
         }
 
@@ -39,13 +42,13 @@ var groupManager = {
             }
 
             selectedLines[i].group = null;
+
+            tableManager.updateRow(selectedLines[i]);
         }
 
         for(groupId in oldGroups){
             oldGroups[groupId].delete();
         }
-
-        return newGroup;
     },
     hasGroups: function(selectedLines){
         
