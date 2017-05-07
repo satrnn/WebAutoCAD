@@ -38,7 +38,7 @@ function PointMove(line, nr, x, y)
         };
     });
 
-    line.group.appendChild(this.Obj);
+    line.container.appendChild(this.Obj);
 
     this.X = x;
     this.Y = y;
@@ -47,7 +47,10 @@ function PointMove(line, nr, x, y)
 
     this.Delete = function()
     {
-        this.Obj.parentNode.removeChild(this.Obj);
+        if(this.Obj != null && this.Obj.parentNode != null)
+            this.Obj.parentNode.removeChild(this.Obj);
+
+        this.Obj = null;
     }
 
     this.Move = function(x, y)

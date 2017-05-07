@@ -1,11 +1,17 @@
-﻿var mode = 0; //select
+﻿var modeEnum = {
+    SELECT : 0,
+    LINES : 1
+}
+
+var mode = modeEnum.SELECT; //select
+
 $("#btn-select").click(function(){
-    mode = 0;
+    mode = modeEnum.SELECT;
     $("#btn-select").addClass("active");
     $("#btn-line").removeClass("active");
 });
 $("#btn-line").click(function(){
-    mode = 1;
+    mode = modeEnum.LINES;
     $("#btn-line").addClass("active");
     $("#btn-select").removeClass("active");
 });
@@ -46,8 +52,6 @@ var layer = $("#layer1");
 
 var dragElemnt = null;
 
-var idIterator = 0;
-
 function getCurrentLabel(){
     var leng = $("#leng").val();
     if(leng == "")
@@ -66,7 +70,7 @@ svg[0].addEventListener("contextmenu", function(event){
     } 
     else
     {
-        lineManager.onContextMenu(event);
+        itemsManager.onContextMenu(event);
     }
 
     return false;
@@ -84,7 +88,7 @@ svg[0].addEventListener("mousedown", function(e)
         lineManager.selectObj(e.target.parentNode);
         return;
     }
-    if(mode == 1 && dragElemnt == null)
+    if(mode == modeEnum.LINES && dragElemnt == null)
     {
         var shadowline = document.createElementNS("http://www.w3.org/2000/svg", "line");
         shadowline.setAttribute("class", "line creating");
@@ -101,7 +105,7 @@ svg[0].addEventListener("mousedown", function(e)
             shadow: shadowline,
         };
     }
-    else if(mode == 0){
+    else if(mode == modeEnum.SELECT){
         layerSelected.startSelect(e.offsetX, e.offsetY);
     }
 });
@@ -112,7 +116,7 @@ svg[0].addEventListener("mouseup", function(e){
     if(layerSelected.isSelecting()){
         layerSelected.endSelect(e.offsetX, e.offsetY);
     }
-    else if(mode == 1 && dragElemnt != null && dragElemnt.shadow != null)
+    else if(mode == modeEnum.LINES && dragElemnt != null && dragElemnt.shadow != null)
     {
         var x1 = dragElemnt.shadow.getAttribute("x1");
         var y1 = dragElemnt.shadow.getAttribute("y1");
@@ -120,7 +124,8 @@ svg[0].addEventListener("mouseup", function(e){
         var x2 = dragElemnt.shadow.getAttribute("x2");
         var y2 = dragElemnt.shadow.getAttribute("y2");
 
-        if(x1 == x2 && y1 == y2){
+        if(x1 == x2 && y1 == y2)
+        {
             lineManager.unselect();
         }
         else
@@ -132,6 +137,7 @@ svg[0].addEventListener("mouseup", function(e){
             else
             {
                 dragElemnt.point.MoveEndLine(x2, y2);
+
             }
         }
     }

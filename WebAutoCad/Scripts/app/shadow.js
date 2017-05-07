@@ -56,6 +56,8 @@ var shadow = {
         var vectorX = x - this._start.x;
         var vectorY = y - this._start.y;
 
+        var groups = {};
+
         for(var i = 0; i < this._elements.length; i++)
         {
             var element = this._elements[i];
@@ -64,6 +66,14 @@ var shadow = {
 
             element.shadowline.parentNode.removeChild(element.shadowline);
 
+            if(element.line.group != null)
+            {
+                groups[element.line.group.id] = element.line.group;
+            }
+        }
+
+        for(groupId in groups){
+            groups[groupId].select();
         }
 
         var layerShadow = document.getElementById("layerShadow");

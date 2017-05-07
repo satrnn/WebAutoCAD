@@ -12,26 +12,71 @@ function Line()
         fi: "0"
     };
 
-    this.group = null;
+    this.container = null;
     this.line = null;
     this.clickable = null;
     this.point1 = null;
     this.point2 = null;
 
-    this.Select = function()
+    this.group = null
+
+    this.getTop = function(){
+        if(this.y1  > this.y2)
+        {
+            return this.y2;
+        }
+        return this.y1;
+    }
+
+    this.getBottom = function(){
+        if(this.y1  < this.y2)
+        {
+            return this.y2;
+        }
+        return this.y1;
+    }
+
+    this.getLeft = function(){
+        if(this.x1  > this.x2)
+        {
+            return this.x2;
+        }
+        return this.x1;
+    }
+
+    this.getRight = function(){
+        if(this.x1  < this.x2)
+        {
+            return this.x2;
+        }
+        return this.x1;
+    }
+
+    this.getHeight = function(){
+        return this.getBottom() - this.getTop();
+    }
+
+    this.getWidth = function(){
+        return this.getRight() - this.getLeft();
+    }
+
+    this.select = function(addPoints)
     {
         this.clickable.setAttribute("class","clickable select");
         $(".line_options").addClass("active");
 
         if(this.point1 != null)
             this.point1.Delete();
-
-        this.point1 = new PointMove(this, 1, this.x1, this.y1);
-
+        
         if(this.point2 != null)
             this.point2.Delete();
-
-        this.point2 = new PointMove(this, 2, this.x2, this.y2);
+        
+        if(addPoints)
+        {
+            this.point1 = new PointMove(this, 1, this.x1, this.y1);
+            this.point2 = new PointMove(this, 2, this.x2, this.y2);
+        }
+        
         tableManager.select(this);
     }
 
@@ -61,7 +106,7 @@ function Line()
         return isx && isy; 
 
     },
-    this.Unselect = function()
+    this.unselect = function()
     {
         this.clickable.setAttribute("class","clickable");
 
@@ -80,8 +125,8 @@ function Line()
 
     this.move2 = function(x, y)
     {
-        this.x2 = x;
-        this.y2 = y;
+        this.x2 = parseFloat(x);
+        this.y2 = parseFloat(y);
         this.clickable.setAttribute("x2", x);
         this.clickable.setAttribute("y2", y);
         
@@ -98,8 +143,8 @@ function Line()
 
     this.move1 = function(x, y)
     {
-        this.x1 = x;
-        this.y1 = y;
+        this.x1 = parseFloat(x);
+        this.y1 = parseFloat(y);
         this.clickable.setAttribute("x1", x);
         this.clickable.setAttribute("y1", y);
 
@@ -128,10 +173,13 @@ function Line()
     this.delete = function(){
         tableManager.deleteRow(this);
 
-        this.point1.Delete();
-        this.point2.Delete();
-
-        this.group.parentNode.removeChild(this.group);
+        if(this.point1 != null){
+            this.point1.Delete();
+        }
+        if(this.point2 != null){
+            this.point2.Delete();
+        }
+        this.container.parentNode.removeChild(this.container);
     }
 
 };
