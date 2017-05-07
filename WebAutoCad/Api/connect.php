@@ -1,8 +1,8 @@
 <?php 
 
 	$host = "localhost";
-	$db_user = "root";
-	$db_password = "";
-	$db_name = "linie"
+	$db_user = "lines1";
+	$db_password = "lines123";
+	$db_name = "lines"
 
 ?>
