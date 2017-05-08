@@ -164,7 +164,7 @@ var shadow = {
         }
 
         for(groupId in groups){
-            groups[groupId].select();
+            groups[groupId].showFrame();
         }
 
         var layerShadow = document.getElementById("layerShadow");

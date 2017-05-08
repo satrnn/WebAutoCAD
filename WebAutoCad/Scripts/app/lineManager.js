@@ -111,8 +111,6 @@ var lineManager = {
         });
 
         layer[0].appendChild(newline.container);
-
-       
         lineManager.lines.push(newline);
 
         tableManager.addRow(newline);
@@ -165,7 +163,7 @@ var lineManager = {
                 selectedLine.group.select();
             }
         }
-       
+        groupPanel.refresh();
     },
     selectInRect: function (x1, y1, x2, y2)
     {
@@ -181,34 +179,35 @@ var lineManager = {
                 line.unselect();
              }
         }
-        if(linesInRect.length == 0)
+        if(linesInRect.length != 0)
         {
-            return;
-        }
-        if(linesInRect.length == 1 && linesInRect[0].group == null)
-        {
-            linesInRect[0].select(true);
-        }
-        else
-        {
-            for(var i= 0; i < linesInRect.length; i++)
+            if(linesInRect.length == 1 && linesInRect[0].group == null)
             {
-                if(linesInRect[i].group == null){
-                    linesInRect[i].select(false);
-                }
-                else
+                linesInRect[0].select(true);
+            }
+            else
+            {
+                for(var i= 0; i < linesInRect.length; i++)
                 {
-                    linesInRect[i].group.select();
+                    if(linesInRect[i].group == null){
+                        linesInRect[i].select(false);
+                    }
+                    else
+                    {
+                        linesInRect[i].group.select();
+                    }
                 }
             }
+            
+            $("#type").val(linesInRect[0].state.type);
+            $("#leng").val(linesInRect[0].state.leng);
+            ResetFi();
+            var typeDom = $("#type")[0];
+            var fi = typeDom.options[typeDom.selectedIndex].dataset.fi;
+            $(fi).val(linesInRect[0].state.fi);
         }
         
-        $("#type").val(linesInRect[0].state.type);
-        $("#leng").val(linesInRect[0].state.leng);
-        ResetFi();
-        var typeDom = $("#type")[0];
-        var fi = typeDom.options[typeDom.selectedIndex].dataset.fi;
-        $(fi).val(linesInRect[0].state.fi);
+        groupPanel.refresh();
     },
     unselect: function(){
         for(var i= 0; i < lineManager.lines.length; i++)
@@ -216,6 +215,7 @@ var lineManager = {
             var line = lineManager.lines[i];
             line.unselect();
         }
+        groupPanel.refresh();
     },
     find: function(id) {
         for(var i= 0; i < lineManager.lines.length; i++)
@@ -301,6 +301,8 @@ var lineManager = {
 
         lineManager.lines.splice(i, 1);
         delete line;
+
+        groupPanel.refresh();
     },
     deleteSelected: function()
     {
@@ -309,6 +311,8 @@ var lineManager = {
         {
             lineManager.deleteById(selected[i].id);
         }
+
+        groupPanel.refresh();
     },
     
 }

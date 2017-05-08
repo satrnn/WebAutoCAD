@@ -103,7 +103,6 @@ svg[0].addEventListener("mouseup", function(e){
     if(layerSelected.isSelecting()){
         layerSelected.endSelect(e.offsetX, e.offsetY);
     }
-    
 
     shadowMoveEndPoint.stop(e.offsetX, e.offsetY);
     shadow.stop(e.offsetX, e.offsetY);
@@ -139,3 +138,6 @@ $(document).click(function(e){
 }).contextmenu(function(e){
     $(".popover").remove();
 });
+
+/** inicjalizacja **/
+groupPanel.init();

@@ -104,15 +104,19 @@ line.shadow {
 }
 
 /*TABELKA*/
-tr {
+tr.hovered {
     cursor: pointer;
 }
 
-tr:hover{
+tr.hovered:hover{
     background: #fffabd;
 }
 
 tr.active
 {
     background: #bde3ff;
+}
+
+.subGroup td:first-child {
+    padding-left: 15px;
 }

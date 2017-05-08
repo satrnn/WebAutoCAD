@@ -4,6 +4,21 @@ function Group()
     this.lines = [];
     this.frame = null;
 
+    this.state = {
+        name: "",
+        multiplier: 1,
+    }
+
+    this.setName = function(value){
+        this.state.name = value;
+        tableManager.updateRows(this.lines);
+    }
+
+    this.setMultiplier = function(value){
+        this.state.multiplier = parseFloat(value);
+        tableManager.updateRows(this.lines);
+    }
+
     this.addLine = function(line)
     {
         this.lines.push(line);

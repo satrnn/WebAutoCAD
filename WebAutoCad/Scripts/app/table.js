@@ -4,13 +4,6 @@ var tableManager = {
     },
     addRow: function(line)
     {
-        //$row =  $("<tr data-lineid=\""+line.id+"\"><td>"+line.state.type + " "+ line.state.fi+"</td><td>"+line.state.leng+" [m]</td></tr>");
-        //$row.click(function(){
-        //    var id = this.dataset.lineid;
-        //    lineManager.select(id);
-        //});
-        //$("table tbody")
-        //    .append($row);
         this.data[line.id] = {
             state: line.state,
             lineId: line.id,
@@ -26,17 +19,29 @@ var tableManager = {
 
         this.updateRow(line);
     },
-    updateRow: function(line)
+    _updateRow: function(line)
     {
         this.data[line.id].state = line.state;
         if(line.group != null){
             this.data[line.id].groupId = line.group.id;
+            this.data[line.id].group = line.group.state;
         }
         else
         {
             this.data[line.id].groupId = null;
+            this.data[line.id].group = null;
         }
-        
+    },
+    updateRow: function(line)
+    {
+        this._updateRow(line);
+        this.summary();
+    },
+    updateRows: function(lines)
+    {
+        for(var i in lines){
+            this._updateRow(lines[i]);
+        }
         this.summary();
     },
     deleteRow: function(line)
@@ -61,26 +66,46 @@ var tableManager = {
     find: function(lineid){
         return $("table tbody tr[data-lineid='"+lineid+"']");
     },
+    sum : {
+        _sum: {},
+        reset: function() {
+            this._sum = {};
+        },
+        add: function(data) {
+            var key = data.type+"_" + data.fi;
+            if(this._sum[key] == undefined)
+            {
+                this._sum[key] = parseFloat(data.leng);
+            }
+            else
+                this._sum[key] += parseFloat(data.leng);
+        },
+        addMultiple: function (data, multiple){
+            var key = data.type+"_" + data.fi;
+            if(this._sum[key] == undefined)
+            {
+                this._sum[key] = parseFloat(data.leng) * parseFloat(multiple);
+            }
+            else
+                this._sum[key] += parseFloat(data.leng) * parseFloat(multiple);
+        },
+        getAll: function(){
+            return this._sum;
+        }
+    },
     summary: function(){
-        var sum = {};
         var groups = {};
         var ungroups = [];
+        this.sum.reset();
 
         for(var prop in this.data)
         {
             var data = this.data[prop];
             if(data != undefined)
             {
-                var key = data.state.type+"_" + data.state.fi;
-                if(sum[key] == undefined)
-                {
-                    sum[key] = parseFloat(data.state.leng);
-                }
-                else
-                    sum[key] += parseFloat(data.state.leng);
-                
                 if(data.groupId == undefined || data.groupId == null)
                 {
+                    this.sum.add(data.state);
                     ungroups.push(data);
                 }
                 else
@@ -91,6 +116,9 @@ var tableManager = {
                         }
                     }
                     groups[data.groupId].items.push(data);
+                    groups[data.groupId].state = data.group;
+
+                    this.sum.addMultiple(data.state, data.group.multiplier);
                 }
             }
         }
@@ -99,15 +127,21 @@ var tableManager = {
 
         for(var group in groups)
         {
-            $row =  $("<tr><td>Grupa:</td><td></td></tr>");
+            var gr = groups[group];
+            $row =  $("<tr><td>" + gr.state.name + " (x" + gr.state.multiplier + "):</td><td></td></tr>");
             $("table tbody")
                 .append($row);
 
-            for(var item in groups[group].items)
+            for(var item in gr.items)
             {
-                var line = groups[group].items[item];
+                var line = gr.items[item];
 
-                $row =  $("<tr data-lineid=\""+line.lineId+"\"><td>"+line.state.type + " "+ line.state.fi+"</td><td>"+line.state.leng+" [m]</td></tr>");
+                $row =  $("<tr class=\"subGroup hovered\" data-lineid=\""+line.lineId+"\"><td>"+line.state.type + " "+ line.state.fi+"</td><td>"+line.state.leng+" [m]</td></tr>");
+                if(line.isActive)
+                {
+                    $row.addClass("active");
+                }
+                
                 $row.click(function(){
                     var id = this.dataset.lineid;
                     lineManager.select(id);
@@ -127,7 +161,12 @@ var tableManager = {
         {
             var line = ungroups[item];
 
-            $row =  $("<tr data-lineid=\""+line.lineId+"\"><td>"+line.state.type + " "+ line.state.fi+"</td><td>"+line.state.leng+" [m]</td></tr>");
+            $row =  $("<tr class=\"hovered\" data-lineid=\""+line.lineId+"\"><td>"+line.state.type + " "+ line.state.fi+"</td><td>"+line.state.leng+" [m]</td></tr>");
+            if(line.isActive)
+            {
+                $row.addClass("active");
+            }
+            
             $row.click(function(){
                 var id = this.dataset.lineid;
                 lineManager.select(id);
@@ -138,6 +177,7 @@ var tableManager = {
 
 
         $("#summary").html("");
+        var sum = this.sum.getAll();
         for(var prop in sum)
         {
             if(sum[prop] == 0)
