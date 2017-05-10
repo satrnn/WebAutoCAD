@@ -22,7 +22,11 @@
 		type: "POST",
 		url: "api/WebAutoCAD.php",
 		dataType: 'json',
-		data: { "dane": dane },
+		data: { 
+			"name": "Projekt",
+			"dane": dane,
+			
+		},
 		success: function(data)
 		{
 			alert("Sukces");

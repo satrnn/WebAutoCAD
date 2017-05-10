@@ -1,55 +1,59 @@
 <?php 
+require("connect.php");
+require("Project.php");
+require("ProjectRepository.php");
+header('Content-Type: text/json; charset=utf-8');
+
+$mySessionUserId = 777;
+
+    $repo = new ProjectRepository($host, $db_name, $db_user,  $db_password);
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Odczyt danych
+        if(isset($_GET["id"]))
+        {
+            $project = $repo->FindByUserId($_GET["id"], $mySessionUserId);
+            if($project == null)
+            {
+                header("HTTP/1.0 404 Not Found");
+                die();
+            }
 
-        $result = array();
-
-		var_dump($_GET);
-        echo json_encode($result);
+            echo json_encode($project);
+        }
+        else
+        {
+            echo json_encode($repo->GetByUserId($mySessionUserId));
+        }
     }
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		
-        include("connect.php") ;
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+    {    
         // Zapis danych
-        $result = array('success' => true);
+        $project = null;
+        if(isset($_POST["id"]))
+        {
+            $project = $repo->FindByUserId($_GET["id"], $mySessionUserId);
+            if($project == null)
+            {
+                header("HTTP/1.0 404 Not Found");
+                die();
+            }
+            if(isset($_POST["name"]))
+                $project -> Name = $_POST["name"];
+            $project -> Content = json_encode($_POST["dane"], JSON_UNESCAPED_UNICODE);
+
+            $repo -> Update($project);
+        }
+		else
+        {
+            $project = Project::Create();
+            if(isset($_POST["name"]))
+                $project -> Name = $_POST["name"];
+            $project -> UserId = $mySessionUserId;
+            $project -> Content = json_encode($_POST["dane"], JSON_UNESCAPED_UNICODE);
 		
-		$dane= $_POST;
-
-        $conn = new mysqli($host, $db_user, $db_password, $db_name);
-        if (!$conn->set_charset("utf8"))   
-        {
-            printf("Error loading character set utf8: %s\n", $conn->error);
+            $repo -> Add($project);
         }
-        $dane = $_POST["dane"];
-
-        for($i = 0; $i < count ($dane) ; $i ++ ) {
-             $item = $dane[$i];
-             $x1 = $item["x1"];
-             $x2 = $item["x2"];
-             $y1 = $item["y1"];
-             $y2 = $item["y2"];
-             $type = $item["state"]["type"];
-             $leng = $item["state"]["leng"];
-             $fi = $item["state"]["fi"];
-
-             $add = "INSERT INTO `lines`(`x1`, `x2`, `y1`, `y2`, `leng`, `type`, `fi`) VALUES('$x1', '$x2', '$y1', '$y2', '$leng', '$type', '$fi')";
-        }
-
-       
-        if ($conn->query($add) === TRUE) 
-        {
-            
-            
-            //echo $dane;
-            echo json_encode("New record created successfully");
-        } 
-        else 
-        {
-            echo "Error: " . $add . "<br>" . $conn->error;
-        }
-
-		//$result['odpowiedz'] = var_dump( $_POST)
-        //echo json_encode($result);
-		
+        
+        echo json_encode(array('success' => true, 'project' => $project));
     }
 ?>
