@@ -84,7 +84,7 @@ function Group()
             this.frame.setAttribute("stroke", "#bde3ff");
             this.frame.setAttribute("stroke-width", "0.7px");
             this.frame.setAttribute("fill", "none");
-            layer[0].appendChild(this.frame);
+            editorObj.appendLayer(this.frame);
         }
         
         this.frame.setAttribute("x", x1);
@@ -100,7 +100,7 @@ function Group()
             line.unselect();
          }
 
-        if(this.frame != null)
+        if(this.frame != null && this.frame.parentNode != null)
         {
             this.frame.parentNode.removeChild(this.frame);
         }
@@ -109,7 +109,7 @@ function Group()
 
     this.delete = function()
     {
-        if(this.frame != null)
+        if(this.frame != null && this.frame.parentNode)
         {
             this.frame.parentNode.removeChild(this.frame);
         }

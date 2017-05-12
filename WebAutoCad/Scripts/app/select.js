@@ -63,7 +63,7 @@ var layerSelected = {
     {
         if(layerSelected.selectDOM != null)
         {
-            layerSelected.layer.removeChild(layerSelected.selectDOM);
+            layerSelected.selectDOM.parentNode.removeChild(layerSelected.selectDOM);
 
             while (layerSelected.layer.firstChild) 
             {

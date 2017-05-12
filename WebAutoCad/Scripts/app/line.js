@@ -18,7 +18,7 @@ function Line()
     this.point1 = null;
     this.point2 = null;
 
-    this.group = null
+    this.group = null;
 
     this.getTop = function(){
         if(this.y1  > this.y2)

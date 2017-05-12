@@ -1,6 +1,7 @@
 <?php 
 require("connect.php");
 require("Project.php");
+require("ProjectApiModel.php");
 require("ProjectRepository.php");
 header('Content-Type: text/json; charset=utf-8');
 
@@ -22,7 +23,8 @@ $mySessionUserId = 777;
         }
         else
         {
-            echo json_encode($repo->GetByUserId($mySessionUserId));
+            
+            echo json_encode(ProjectApiModel::ParseAll($repo->GetByUserId($mySessionUserId)));
         }
     }
     if ($_SERVER['REQUEST_METHOD'] === 'POST') 

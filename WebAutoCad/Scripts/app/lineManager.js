@@ -109,13 +109,17 @@ var lineManager = {
             }
             
         });
-
-        layer[0].appendChild(newline.container);
+        editorObj.appendLayer(newline.container);
         lineManager.lines.push(newline);
 
         tableManager.addRow(newline);
         
         return newline;
+    },
+    loadLine: function(line)
+    {
+        var newLine = this.addLine(line.x1, line.y1, line.x2, line.y2);
+        newLine.setState(line.state);
     },
     selectObj: function(obj){
         var id = obj.getAttribute("id");
@@ -145,13 +149,8 @@ var lineManager = {
             if(selectedLine.group == null || wasSelected)
             {
                 selectedLine.select(true);
-
-                $("#type").val(selectedLine.state.type);
-                $("#leng").val(selectedLine.state.leng);
-                ResetFi();
-                var typeDom = $("#type")[0];
-                var fi = typeDom.options[typeDom.selectedIndex].dataset.fi;
-                $(fi).val(selectedLine.state.fi);
+                editorObj.setFormValues(selectedLine.state);
+               
 
                 if(selectedLine.group != null)
                 {
@@ -198,13 +197,7 @@ var lineManager = {
                     }
                 }
             }
-            
-            $("#type").val(linesInRect[0].state.type);
-            $("#leng").val(linesInRect[0].state.leng);
-            ResetFi();
-            var typeDom = $("#type")[0];
-            var fi = typeDom.options[typeDom.selectedIndex].dataset.fi;
-            $(fi).val(linesInRect[0].state.fi);
+            editorObj.setFormValues(linesInRect[0].state);
         }
         
         groupPanel.refresh();
@@ -314,5 +307,14 @@ var lineManager = {
 
         groupPanel.refresh();
     },
-    
+    deleteAll: function()
+    {
+        var selected = this.lines;
+        for(var i = 0; i < selected.length; i++)
+        {
+            lineManager.deleteById(selected[i].id);
+        }
+
+        groupPanel.refresh();
+    },
 }

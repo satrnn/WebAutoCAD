@@ -19,7 +19,8 @@ var shadowMoveEndPoint = {
         shadowline.setAttribute("x2", x);
         shadowline.setAttribute("y2", y);
 
-        layer[0].appendChild(shadowline);
+        editorObj.appendLayer(shadowline);
+       
 
         this._dragElemnt = {
             shadow: shadowline,
