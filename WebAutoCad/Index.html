@@ -20,10 +20,11 @@
       </table>
 </div>
 <div id="w-editor" class="cointener">
-<button id="btn-save" class="btn active">zapisz</button>
-<!-- ko with: home -->
-<button id="btn-select" class="btn active">Zanacz</button>
-<button id="btn-line" class="btn">Linie</button>
+      <span id="w-project-name" class="project-name" data-toggle="modal" data-target="#settingsModal"></span>
+      <button id="btn-save" class="btn active">zapisz</button>
+
+      <button id="btn-select" class="btn active">Zanacz</button>
+      <button id="btn-line" class="btn">Linie</button>
 <div class="line_options">
       <select id="type">
             <option data-fi="#fi_1">gładki</option>
@@ -150,6 +151,30 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<form id="form-settings" action="#" >
+<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="settingsModalLabel">Ustawienia</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">Nazwa projektu:</label>
+            <input type="text" class="form-control" id="project-name">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
+        <button id="btn-save-settings" type="submit" class="btn btn-primary " type="">Zapisz</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
 
 <script src="Scripts/libs/jquery-3.1.1.js"></script>
 <script src="Scripts/libs/bootstrap.min.js?v=3.3.7"></script>

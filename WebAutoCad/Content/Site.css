@@ -16,6 +16,14 @@
     vertical-align: top;
 }
 
+.project-name {
+    cursor: pointer;
+}
+
+.project-name:hover{
+    
+}
+
 .w-btn 
 {
     -webkit-border-radius: 2px;

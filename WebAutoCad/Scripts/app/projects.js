@@ -99,9 +99,12 @@ var projects = {
         var project = this.find(id);
 
         this.$projectCointeiner.hide();
-        editorObj.loadProject(project);
+        
         this.currentProjectId = project.id;
         this.currentProjectName = project.name;
+        
+        editorObj.loadProject(project);
+        
     },
     createNewProject: function()
     {

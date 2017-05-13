@@ -5,6 +5,15 @@ require("ProjectApiModel.php");
 require("ProjectRepository.php");
 header('Content-Type: text/json; charset=utf-8');
 
+function _GetContent()
+{
+    if(!isset($_POST["dane"]))
+    {
+        return null;
+    }
+    return json_encode($_POST["dane"], JSON_UNESCAPED_UNICODE);
+}
+
 $mySessionUserId = 777;
 
     $repo = new ProjectRepository($host, $db_name, $db_user,  $db_password);
@@ -48,7 +57,7 @@ $mySessionUserId = 777;
             {
                 if(isset($_POST["name"]))
                 $project -> Name = $_POST["name"];
-                $project -> Content = json_encode($_POST["dane"], JSON_UNESCAPED_UNICODE);
+                $project -> Content = _GetContent(); 
                 $repo -> Update($project);
             }
         }
@@ -57,8 +66,9 @@ $mySessionUserId = 777;
             $project = Project::Create();
             if(isset($_POST["name"]))
                 $project -> Name = $_POST["name"];
+
             $project -> UserId = $mySessionUserId;
-            $project -> Content = json_encode($_POST["dane"], JSON_UNESCAPED_UNICODE);
+            $project -> Content = _GetContent();
 		
             $repo -> Add($project);
         }

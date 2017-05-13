@@ -38,6 +38,10 @@ function editorManager() {
             $("#btn-line").addClass("active");
             $("#btn-select").removeClass("active");
         });
+
+        $("w-project-name").click(function(){
+
+        });
         $("#type").change(function(e){
             _this.resetFi();
 
@@ -123,6 +127,8 @@ function editorManager() {
                 shadow.move(e.offsetX, e.offsetY);
             }
         });
+
+        settingsModal.init();
     }
     this.setFormValues = function(state) {
          $("#type").val(state.type);
@@ -144,7 +150,7 @@ function editorManager() {
     {
         this.clear();
         this.show();
-        if(project != undefined)
+        if(project != undefined && project.content != null)
         {
             var loadedGroups = groupManager.loadGroup(project.content.groups);
             for(var i = 0; i < project.content.lines.length; i++)
@@ -153,6 +159,7 @@ function editorManager() {
                 lineManager.loadLine(line, loadedGroups);
             }
         }
+        $("#w-project-name").text(projects.currentProjectName);
         
     }
     return this;
@@ -184,3 +191,28 @@ $(document).click(function(e){
     $(".popover").remove();
 });
 
+
+var settingsModal =  {
+    init: function()
+    {
+        $('#settingsModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var modal = $(this);
+
+            modal.find('.modal-title').text('Ustawienia');
+            modal.find('.modal-body input').val(button.text());
+        });
+
+        $("#form-settings").submit(function(e){
+             e.preventDefault();
+             var modal = $('#settingsModal');
+             modal.modal("hide");
+
+             var projectName = modal.find('.modal-body input').val();
+             $("#w-project-name").text(projectName);
+             projects.currentProjectName = projectName;
+
+             return false;
+        });
+    }
+}
