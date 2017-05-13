@@ -16,16 +16,23 @@ class ProjectApiModel {
         $results = array();
 
         for($p = 0; $p < count($projects); $p++ ){
-            $item = new ProjectApiModel();
-            $item -> id = $projects[$p] -> Id;
-            $item -> name = $projects[$p] -> Name;
-            $item -> content = json_decode($projects[$p] -> Content);
-            $item -> addDate = $projects[$p] -> AddDate;
-            $item -> lastUpdate = $projects[$p] -> LastUpdate;
+            $item =  ProjectApiModel::Parse($projects[$p]);
             array_push($results, $item);
         };
 
         return $results;
+    }
+
+    public static function Parse($project)
+    {
+        $item = new ProjectApiModel();
+        $item -> id = $project -> Id;
+        $item -> name = $project -> Name;
+        $item -> content = json_decode($project -> Content);
+        $item -> addDate = $project -> AddDate;
+        $item -> lastUpdate = $project -> LastUpdate;
+
+        return $item;
     }
 } 
 ?> 

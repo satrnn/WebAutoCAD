@@ -42,10 +42,8 @@ var groupManager = {
     //groups: [],
     createGroup: function (selectedLines)
     {
-        var newGroup = new Group();
-        var id = this._idIterator++;
-        newGroup.id = "group_" + id;
-        newGroup.state.name = "Gruupa " + id;
+        var newGroup = this._createGroup();
+
         var oldGroups = {};
 
         for(var i = 0 ; i < selectedLines.length; i++)
@@ -67,9 +65,32 @@ var groupManager = {
         }
 
         newGroup.select();
-
         groupPanel.refresh();
         return newGroup;
+    },
+    _createGroup: function(){
+        var newGroup = new Group();
+        var id = this._idIterator++;
+        newGroup.id = "group_" + id;
+        newGroup.state.name = "Grupa " + id;
+        return newGroup;
+    },
+    loadGroup: function (groupsData) 
+    {
+        var groups = [];
+        for(var i = 0; i < groupsData.length; i++)
+        {
+            var groupData = groupsData[i];
+
+            var newGroup = this._createGroup();
+            newGroup.setState(groupData.state);
+            groups.push({
+                id: groupData.id,
+                group: newGroup,
+            });
+        }
+        
+        return groups;
     },
     ungroup: function (selectedLines)
     {   
@@ -105,13 +126,22 @@ var groupManager = {
 
         return false;
     },
+    getAllGroups: function()
+    {
+        var lines = lineManager.lines;
+        return this._linesToGroups(lines);
+    },
     getSelectedGroups: function()
     {
         var slectedLines = lineManager.findSelected();
-        var groups = {};
-        for(var i = 0; i < slectedLines.length; i++)
+        return this._linesToGroups(slectedLines);
+    },
+    _linesToGroups: function(lines)
+    {
+         var groups = {};
+        for(var i = 0; i < lines.length; i++)
         {
-            var group = slectedLines[i].group;
+            var group = lines[i].group;
             if(group != null)
             {
                 groups[group.id] = group;

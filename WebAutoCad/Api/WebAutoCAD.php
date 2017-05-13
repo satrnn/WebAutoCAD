@@ -31,19 +31,26 @@ $mySessionUserId = 777;
     {    
         // Zapis danych
         $project = null;
-        if(isset($_POST["id"]))
+        if(isset($_POST["id"]) && $_POST["id"] != null)
         {
-            $project = $repo->FindByUserId($_GET["id"], $mySessionUserId);
+            $project = $repo->FindByUserId($_POST["id"], $mySessionUserId);
             if($project == null)
             {
                 header("HTTP/1.0 404 Not Found");
                 die();
             }
-            if(isset($_POST["name"]))
-                $project -> Name = $_POST["name"];
-            $project -> Content = json_encode($_POST["dane"], JSON_UNESCAPED_UNICODE);
 
-            $repo -> Update($project);
+            if(isset($_POST["delete"]) && (bool)$_POST["delete"])
+            {
+                 $repo -> Delete($project -> Id);
+            }
+            else
+            {
+                if(isset($_POST["name"]))
+                $project -> Name = $_POST["name"];
+                $project -> Content = json_encode($_POST["dane"], JSON_UNESCAPED_UNICODE);
+                $repo -> Update($project);
+            }
         }
 		else
         {
@@ -56,6 +63,6 @@ $mySessionUserId = 777;
             $repo -> Add($project);
         }
         
-        echo json_encode(array('success' => true, 'project' => $project));
+        echo json_encode(array('success' => true, 'project' => ProjectApiModel::Parse($project)));
     }
 ?>

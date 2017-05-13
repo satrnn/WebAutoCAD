@@ -19,6 +19,11 @@ function Group()
         tableManager.updateRows(this.lines);
     }
 
+    this.setState = function(data)
+    {
+        this.state = jQuery.extend({}, data);
+    }
+
     this.addLine = function(line)
     {
         this.lines.push(line);

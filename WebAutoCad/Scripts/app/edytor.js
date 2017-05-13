@@ -144,12 +144,16 @@ function editorManager() {
     {
         this.clear();
         this.show();
-
-        for(var i = 0; i < project.content.length; i++)
+        if(project != undefined)
         {
-            var line =  project.content[i];
-            lineManager.loadLine(line);
+            var loadedGroups = groupManager.loadGroup(project.content.groups);
+            for(var i = 0; i < project.content.lines.length; i++)
+            {
+                var line =  project.content.lines[i];
+                lineManager.loadLine(line, loadedGroups);
+            }
         }
+        
     }
     return this;
 };

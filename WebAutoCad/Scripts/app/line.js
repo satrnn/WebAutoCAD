@@ -174,7 +174,7 @@ function Line()
     }
 
     this.setState= function(data){
-        this.state = jQuery.extend({}, data);;
+        this.state = jQuery.extend({}, data);
         var text = this.state.type + " fi"+ this.state.fi + " " + this.state.leng + "[m]";
         this.label.textContent = text;
     }

@@ -1,10 +1,23 @@
-﻿.col
+﻿/* Lista projektów */
+.cointener {
+    margin: 15px;
+
+}
+.cointener header {
+    margin: 15px 0px;
+}
+.projectList tr{
+    cursor: pointer;
+}
+
+.col
 {
     display: inline-block;
     vertical-align: top;
 }
 
-.btn {
+.w-btn 
+{
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;

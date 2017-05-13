@@ -116,10 +116,25 @@ var lineManager = {
         
         return newline;
     },
-    loadLine: function(line)
+    loadLine: function(line, groups)
     {
+       
+        var newGroup = null;
+        for(var i = 0; i< groups.length; i++)
+        {
+            if(groups[i].id == line.groupId){
+                newGroup = groups[i].group;
+            }
+        }
         var newLine = this.addLine(line.x1, line.y1, line.x2, line.y2);
+        
+        newLine.group = newGroup;
+        if(newGroup != null)
+        {
+            newGroup.addLine(newLine);
+        }
         newLine.setState(line.state);
+        tableManager.updateRow(newLine);
     },
     selectObj: function(obj){
         var id = obj.getAttribute("id");

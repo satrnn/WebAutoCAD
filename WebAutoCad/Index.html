@@ -1,14 +1,25 @@
 ﻿<!DOCTYPE html>
 <html >
       <head>
-            <link href="Content/Site.css" rel="stylesheet" type="text/css">
+            
             <link href="Content/font-awesome.min.css" rel="stylesheet" type="text/css">
+            <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link href="Content/Site.css" rel="stylesheet" type="text/css">
       </head>
 <body>
-<div id="projects">
-      <ul id="projectList"></ul>
+<div id="projects" class="cointener">
+      <header>
+            <button id="btn-create-project" class="btn btn-success">
+                  <span class="glyphicon glyphicon-plus"></span> Nowy projekt
+            </button>
+      </header>
+      
+      <table id="projectList" class="table table-hover projectList">
+            <tbody>
+            </tbody>
+      </table>
 </div>
-<div id="w-editor">
+<div id="w-editor" class="cointener">
 <button id="btn-save" class="btn active">zapisz</button>
 <!-- ko with: home -->
 <button id="btn-select" class="btn active">Zanacz</button>
@@ -121,7 +132,28 @@
 
 </div>
 </div> <!-- end editor -->
-<script src="Scripts/jquery-3.1.1.js"></script>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
+        <button type="button" class="btn btn-danger btn-action">Usuń</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="Scripts/libs/jquery-3.1.1.js"></script>
+<script src="Scripts/libs/bootstrap.min.js?v=3.3.7"></script>
+
 <script src="Scripts/app/table.js"></script>
 <script src="Scripts/app/pointMove.js"></script>
 <script src="Scripts/app/line.js"></script>
