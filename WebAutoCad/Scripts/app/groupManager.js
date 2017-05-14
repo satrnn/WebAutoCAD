@@ -78,17 +78,21 @@ var groupManager = {
     loadGroup: function (groupsData) 
     {
         var groups = [];
-        for(var i = 0; i < groupsData.length; i++)
+        if(groupsData != null)
         {
-            var groupData = groupsData[i];
+            for(var i = 0; i < groupsData.length; i++)
+            {
+                var groupData = groupsData[i];
 
-            var newGroup = this._createGroup();
-            newGroup.setState(groupData.state);
-            groups.push({
-                id: groupData.id,
-                group: newGroup,
-            });
+                var newGroup = this._createGroup();
+                newGroup.setState(groupData.state);
+                groups.push({
+                    id: groupData.id,
+                    group: newGroup,
+                });
+            }
         }
+        
         
         return groups;
     },

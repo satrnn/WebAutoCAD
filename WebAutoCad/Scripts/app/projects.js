@@ -113,6 +113,9 @@ var projects = {
         this.currentProjectName = "Projekt";
         editorObj.loadProject();
     },
+    show: function (){
+         this.$projectCointeiner.show();
+    },
     refresh: function()
     {
         this.getAll();

@@ -4,6 +4,8 @@ function editorManager() {
     var svg = $("svg");
     var layer = $("#layer1");
 
+    var hasUnsavedChanges = false;
+
     this.modeEnum = {
         SELECT : 0,
         LINES : 1
@@ -162,20 +164,14 @@ function editorManager() {
         $("#w-project-name").text(projects.currentProjectName);
         
     }
+
+    this.openProjectList = function(){
+        this.hide();
+        projects.show();
+    };
+
     return this;
 };
-
-/*
-function getCurrentLabel(){
-    var leng = $("#leng").val();
-    if(leng == "")
-        leng = 0;
-
-    return $("#type").val() + " " + leng + "[m]";
-
-}*/
-
-
 
 $(window).on('keyup', function (evt)
 {
@@ -191,16 +187,19 @@ $(document).click(function(e){
     $(".popover").remove();
 });
 
+$("#btn-open-project-list").click(function(){
+    editorObj.openProjectList();
+});
 
 var settingsModal =  {
     init: function()
     {
         $('#settingsModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
+            
             var modal = $(this);
 
             modal.find('.modal-title').text('Ustawienia');
-            modal.find('.modal-body input').val(button.text());
+            modal.find('.modal-body input').val(projects.currentProjectName);
         });
 
         $("#form-settings").submit(function(e){

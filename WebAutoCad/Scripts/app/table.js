@@ -129,7 +129,7 @@ var tableManager = {
         {
             var gr = groups[group];
             $row =  $("<tr><td>" + gr.state.name + " (x" + gr.state.multiplier + "):</td><td></td></tr>");
-            $("table tbody")
+            $("#lines-table tbody")
                 .append($row);
 
             for(var item in gr.items)

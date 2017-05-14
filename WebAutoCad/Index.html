@@ -20,9 +20,25 @@
       </table>
 </div>
 <div id="w-editor" class="cointener">
-      <span id="w-project-name" class="project-name" data-toggle="modal" data-target="#settingsModal"></span>
-      <button id="btn-save" class="btn active">zapisz</button>
-
+      <div class="btn-group">
+            <button type="button" id="w-project-name" class="btn btn-default" data-toggle="modal" data-target="#settingsModal">
+                 
+            </button>
+            <button class="btn btn-default dropdown-toggle" type="button" 
+                        id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  
+                  <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                  <li><a id="btn-save" href="#">Zapisz</a></li>
+                  <li><a id="btn-open-project-list" href="#">Otwórz projekt...</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#" data-toggle="modal" data-target="#settingsModal">Ustawienia...</a></li>
+            </ul>
+      </div>
+      <!--
+      -->
+     
       <button id="btn-select" class="btn active">Zanacz</button>
       <button id="btn-line" class="btn">Linie</button>
 <div class="line_options">
@@ -120,7 +136,7 @@
             </div>
       <div class="col">
             <strong>Linie:</strong>
-            <table>
+            <table id="lines-table">
                   <tbody>
                   </tbody>
                   <tfoot></tfoot>
@@ -178,7 +194,6 @@
 
 <script src="Scripts/libs/jquery-3.1.1.js"></script>
 <script src="Scripts/libs/bootstrap.min.js?v=3.3.7"></script>
-
 <script src="Scripts/app/table.js"></script>
 <script src="Scripts/app/pointMove.js"></script>
 <script src="Scripts/app/line.js"></script>
